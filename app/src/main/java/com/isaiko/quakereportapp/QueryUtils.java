@@ -59,7 +59,8 @@ public final class QueryUtils {
                 Double mag = prop.getDouble("mag");
                 String loc = prop.getString("place");
                 Long time = prop.getLong("time");
-                Earthquake eq = new Earthquake(mag,loc,time);
+                String url = prop.getString("url");
+                Earthquake eq = new Earthquake(mag,loc,time,url);
                 earthquakes.add(eq);
             }
 

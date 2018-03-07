@@ -74,6 +74,8 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         magnitudeCircle.setColor(magnitudeColor);
 
 
+
+
         return listItemView;
     }
 

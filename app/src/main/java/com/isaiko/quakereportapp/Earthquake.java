@@ -1,8 +1,5 @@
 package com.isaiko.quakereportapp;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.SimpleTimeZone;
 
 /**
  * Created by ahmed on 3/6/2018.
@@ -15,14 +12,15 @@ public class Earthquake {
 
     private String mLocation;
 
-
+    private String mURL;
 
     private Long mTimeInMilliseconds;
 
-    public Earthquake(Double magnitude, String location, long timeInMilliseconds) {
-        mMagnitude = magnitude;
-        mLocation = location;
-        mTimeInMilliseconds = timeInMilliseconds;
+    public Earthquake(Double magnitude, String location, long timeInMilliseconds, String URL) {
+        this.mMagnitude = magnitude;
+        this.mLocation = location;
+        this.mTimeInMilliseconds = timeInMilliseconds;
+        this.mURL = URL;
     }
 
     public Double getmMagnitude() {
@@ -37,4 +35,7 @@ public class Earthquake {
         return mTimeInMilliseconds;
     }
 
+    public String getmURL() {
+        return mURL;
+    }
 }
