@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -35,11 +36,19 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         Earthquake currentEarthquake = getItem(position);
 
-        TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
-        magnitudeView.setText(currentEarthquake.getmMagnitude());
 
-        TextView locationView = (TextView) listItemView.findViewById(R.id.location);
-        locationView.setText(currentEarthquake.getmLocation());
+        TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
+        DecimalFormat formatter = new DecimalFormat("0.0");
+        magnitudeView.setText(formatter.format(currentEarthquake.getmMagnitude()));
+
+        String location = formatLocation(currentEarthquake.getmLocation());
+        String[] splitLocation = location.split("--");
+
+        TextView locationOffsetView = (TextView) listItemView.findViewById(R.id.location_offset);
+        locationOffsetView.setText(splitLocation[0]);
+
+        TextView primaryLocationView = (TextView) listItemView.findViewById(R.id.primary_location);
+        primaryLocationView.setText(splitLocation[1]);
 
         Date dateObject = new Date(currentEarthquake.getmTimeInMilliseconds());
 
@@ -69,5 +78,18 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
     private String formatTime(Date dateObject) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
         return timeFormat.format(dateObject);
+    }
+
+    private String formatLocation(String wholeLocation){
+        String locationOffset, primaryLocation;
+        if(wholeLocation.contains("of")) {
+            String[] splitString = wholeLocation.split("of");
+            locationOffset = splitString[0] + " of ";
+            primaryLocation = splitString[1];
+        }else{
+            primaryLocation = wholeLocation;
+            locationOffset = "Near the";
+        }
+        return locationOffset + "--" + primaryLocation;
     }
 }

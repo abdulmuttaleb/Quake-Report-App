@@ -11,7 +11,7 @@ import java.util.SimpleTimeZone;
 public class Earthquake {
 
 
-    private String mMagnitude;
+    private Double mMagnitude;
 
     private String mLocation;
 
@@ -19,13 +19,13 @@ public class Earthquake {
 
     private Long mTimeInMilliseconds;
 
-    public Earthquake(String magnitude, String location, long timeInMilliseconds) {
+    public Earthquake(Double magnitude, String location, long timeInMilliseconds) {
         mMagnitude = magnitude;
         mLocation = location;
         mTimeInMilliseconds = timeInMilliseconds;
     }
 
-    public String getmMagnitude() {
+    public Double getmMagnitude() {
         return mMagnitude;
     }
 
