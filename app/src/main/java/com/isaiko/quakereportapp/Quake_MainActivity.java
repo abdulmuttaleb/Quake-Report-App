@@ -1,10 +1,12 @@
 package com.isaiko.quakereportapp;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,10 @@ public class Quake_MainActivity extends AppCompatActivity  implements LoaderCall
     public static final String LOG_TAG = Quake_MainActivity.class.getName();
 
     private EarthquakeAdapter mAdapter;
+
+    private TextView mEmptyStateTextView;
+
+    private ProgressBar mProgressBar;
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
@@ -42,9 +50,19 @@ public class Quake_MainActivity extends AppCompatActivity  implements LoaderCall
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+
+        //hide the progressbar
+        mProgressBar.setVisibility(View.GONE);
+
+        mEmptyStateTextView.setText(R.string.no_earthquakes);
+
         mAdapter.clear();
-        if(earthquakes != null || !earthquakes.isEmpty()){
-            mAdapter.addAll(earthquakes);
+        try {
+            if (earthquakes != null || !earthquakes.isEmpty()) {
+                mAdapter.addAll(earthquakes);
+            }
+        }catch(NullPointerException e){
+            Log.e(LOG_TAG, "Null pointer Exception");
         }
         Log.d(LOG_TAG, "OnLoadFinished");
 
@@ -53,11 +71,19 @@ public class Quake_MainActivity extends AppCompatActivity  implements LoaderCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_quake_main);
 
-
-
+        //set earthquake view
         ListView earthquakesView = (ListView) findViewById(R.id.list);
+        earthquakesView.setEmptyView(findViewById(R.id.empty_view));
+
+        //set Empty state view
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        earthquakesView.setEmptyView(mEmptyStateTextView);
+
+        // set progressbar view
+        mProgressBar = findViewById(R.id.progress_bar);
 
         mAdapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
@@ -76,9 +102,19 @@ public class Quake_MainActivity extends AppCompatActivity  implements LoaderCall
             }
         });
 
-        LoaderManager loaderManager = getLoaderManager();
+        // testing for network connectivity
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
-        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        if(isConnected) {
+            LoaderManager loaderManager = getLoaderManager();
+
+            loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        }else{
+            mProgressBar.setVisibility(View.GONE);
+            mEmptyStateTextView.setText("Please, check your connection!");
+        }
     }
 
     private void openURL(String url){

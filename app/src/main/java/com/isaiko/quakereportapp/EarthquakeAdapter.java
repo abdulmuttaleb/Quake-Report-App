@@ -38,6 +38,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         Earthquake currentEarthquake = getItem(position);
 
 
+
         TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
         DecimalFormat formatter = new DecimalFormat("0.0");
         magnitudeView.setText(formatter.format(currentEarthquake.getmMagnitude()));
