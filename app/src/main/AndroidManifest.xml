@@ -18,6 +18,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SettingsActivity"
+            android:label="@string/settings_title">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".Quake_MainActivity"
+            />
+
+        </activity>
 
     </application>
 
